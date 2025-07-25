@@ -1,0 +1,18 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "cstrap.flask-snippets",
+        "njpwerner.autodocstring",
+        "ms-python.isort",
+        "ms-python.black-formatter",
+        "mongodb.mongodb-vscode",
+        "humao.rest-client",
+        "rangav.vscode-thunder-client",
+        "aaron-bond.better-comments",
+        "eamodio.gitlens",
+        "coenraads.bracket-pair-colorizer-2",
+        "ms-vsliveshare.vsliveshare",
+        "christian-kohler.path-intellisense"
+    ]
+}
