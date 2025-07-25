@@ -74,6 +74,7 @@ def delete_patient(patient_id):
     return jsonify({"message": f"Patient with ID {patient_id} deleted."})
 
 
+# MongoDB test connection
 @app.route("/test-mongo")
 def test_mongo_connection():
     try:
