@@ -4,8 +4,8 @@ from bson.objectid import ObjectId
 
 patient_bp = Blueprint("client_bp", __name__)
 
-patient = MongoClient("mongodb+srv://lorbs32:hbstudent@cluster1.7yqbvki.mongodb.net/")
-db = patient["therapytrackr"]
+client = MongoClient("mongodb+srv://lorbs32:hbstudent@cluster1.7yqbvki.mongodb.net/")
+db = client["therapytrackr"]
 patients_collection = db["patients"]
 
 
@@ -13,6 +13,20 @@ patients_collection = db["patients"]
 @patient_bp.route("/")
 def home():
     return "Welcome to TherapyTrackr API"
+
+
+# POST request to add a new patient
+@patient_bp.route("/patients", methods=["POST"])
+def add_patient():
+    data = request.get_json()
+    new_patient = {
+        "name": data.get("name"),
+        "age": data.get("age"),
+        "condition": data.get("condition"),
+    }
+    result = patients_collection.insert_one(new_patient)
+    new_patient["_id"] = str(result.inserted_id)
+    return jsonify(new_patient), 201
 
 
 # GET request to return all patients
@@ -35,20 +49,6 @@ def get_patient(patient_id):
         return jsonify({"error": "Patient not found"}), 404
     except Exception:
         return jsonify({"error": "invalid ID format"}), 400
-
-
-# POST request to add a new patient
-@patient_bp.route("/patients", methods=["POST"])
-def add_patient():
-    data = request.get_json()
-    new_patient = {
-        "name": data.get("name"),
-        "age": data.get("age"),
-        "condition": data.get("condition"),
-    }
-    result = patients_collection.insert_one(new_patient)
-    new_patient["_id"] = str(result.inserted_id)
-    return jsonify(new_patient), 201
 
 
 # PUT request to update patient
