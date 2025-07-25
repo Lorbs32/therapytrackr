@@ -1,6 +1,12 @@
 from flask import Flask, jsonify, request
+from pymongo import MongoClient
+
 
 app = Flask(__name__)
+
+client = MongoClient("mongodb+srv://lorbs32:hbstudent@cluster1.7yqbvki.mongodb.net/")
+db = client["patienttrackr"]
+patients_collection = db["patients"]
 
 # Dummy data
 patients = [
@@ -60,6 +66,25 @@ def delete_patient(patient_id):
         return jsonify({"error": "Patient not found"}), 404
     patients = new_list
     return jsonify({"message": f"Patient with ID {patient_id} deleted."})
+
+@app.route('/test-mongo')
+def test_mongo_connection():
+    try:
+        # Try inserting a temporary document
+        test_doc = {"message": "Hello from MongoDB!"}
+        result = patients_collection.insert_one(test_doc)
+
+        # Then immediately find it
+        inserted_doc = patients_collection.find_one({"_id": result.inserted_id})
+
+        # Clean up (optional in dev)
+        patients_collection.delete_one({"_id": result.inserted_id})
+
+        return jsonify({"success": True, "document": str(inserted_doc)})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
